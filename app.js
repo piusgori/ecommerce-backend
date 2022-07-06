@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 
-const keys = require('./private/keys');
+// const keys = require('./private/keys');
 const HttpError = require('./models/http-error');
 const mainRoutes = require('./routes/main-routes');
 const authRoutes = require('./routes/auth-routes');
