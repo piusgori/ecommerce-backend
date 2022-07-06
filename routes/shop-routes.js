@@ -6,7 +6,7 @@ const shopControllers = require('../controllers/shop-controllers');
 const router = express.Router();
 
 const request = require('request');
-const keys = require('../private/keys');
+// const keys = require('../private/keys');
 
 const getAccess = (req, res, next) => {
     const url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
