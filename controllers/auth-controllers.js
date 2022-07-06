@@ -304,7 +304,7 @@ exports.adminSignup = async (req, res, next) => {
     let token;
 
     try {
-        token = jwt.sign({ id: newAdmin._id, email: newAdmin.email, isAdmin: true }, 'shop_secret', { expiresIn: '1h' });
+        token = jwt.sign({ id: newAdmin._id, email: newAdmin.email, isAdmin: true }, 'shop_secret');
     } catch (err) {
         return next(new HttpError('An error occurred while creating a token', null, 500));
     }
@@ -350,7 +350,7 @@ exports.adminLogin = async (req, res, next) => {
     let token;
 
     try {
-        token = jwt.sign({ id: existingAdmin._id, email: existingAdmin.email, isAdmin: true }, 'shop_secret', { expiresIn: '1h' });
+        token = jwt.sign({ id: existingAdmin._id, email: existingAdmin.email, isAdmin: true }, 'shop_secret');
     } catch (err) {
         return next(new HttpError('An error occurred while creating a token', null, 500));
     }
