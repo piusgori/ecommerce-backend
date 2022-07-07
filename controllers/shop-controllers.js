@@ -7,6 +7,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/admin');
 const Order = require('../models/order');
+const Category = require('../models/category');
 
 exports.getProducts = async (req, res, next) => {
     const products = [];
@@ -297,6 +298,72 @@ exports.delivery = async (req, res, next) => {
     }
 
     res.status(200).json({ message: 'Delivery has been made successfully' });
+}
+
+exports.createCategory = async (req, res, next) => {
+    const token = req.headers.authorization.split(' ')[1];
+    const { title } = req.body;
+
+    let decodedId;
+    try {
+        if(!token){
+            const message = 'Your token has expired';
+            const type = 'code'
+            return next(new HttpError('Token error', [{ message, type }], 403));
+        }
+        const decodedToken = jwt.verify(token, 'shop_secret');
+        decodedId = decodedToken.id;
+        
+    } catch (err) {
+        return next(new HttpError('Error validating token', null, 500));
+    }
+
+    let foundAdmin;
+
+    try {
+        foundAdmin = await Admin.findById(decodedId);
+        if(!foundAdmin){
+            const message = 'You are not allowed to create a new product.';
+            const type = 'code';
+            return next(new HttpError('Token error', [{ message, type }], 403));
+        }
+
+    } catch (err) {
+        return next(new HttpError('Error validating the token', null, 500));
+    }
+
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        const errorArray = errors.array();
+        const messageArray = [];
+        for(const k of errorArray){
+            const each = { message: k.msg, type: k.param }
+            messageArray.push(each);
+        }
+        return next(new HttpError('Unable to Process', messageArray, 422));
+    }
+
+    let foundCategory; 
+
+    try {
+        foundCategory = await Category.findOne({ title });
+        if(foundCategory){
+            const message = 'This category already exists.';
+            const type = 'title';
+            return next(new HttpError('Unable to process category title', [{ message, type }], 422))
+        }
+    } catch (err) {
+        return next(new HttpError('Unable to look for the category name'));
+    }
+
+    const newCategory = new Category({ title });
+
+    try {
+        await newCategory.save();
+    } catch (err) {
+        return next(new HttpError('Unable to save the new category', null, 500));
+    }
+    res.status(201).json({ message: 'Category added successfully', title: title })
 }
 
 exports.accessToken = async (req, res, next) => {

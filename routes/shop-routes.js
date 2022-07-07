@@ -36,6 +36,10 @@ router.post('/', [
     body('price').isLength({ min: 2 }).withMessage('Please enter a valid price for your product'),
 ], shopControllers.createProduct);
 
+router.post('/category', [
+    body('title').isLength({ min: 2 }).withMessage('Please enter a valid category name of at least 2 characters long'),
+], shopControllers.createCategory);
+
 router.patch('/product/:productId', shopControllers.editProduct);
 
 router.delete('/product/:productId', shopControllers.deleteProduct);
