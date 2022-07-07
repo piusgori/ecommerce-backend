@@ -28,6 +28,8 @@ router.get('/', shopControllers.getProducts);
 
 router.get('/category', shopControllers.getCategories);
 
+router.get('/order', shopControllers.getOrders);
+
 router.get('/product/:productId', shopControllers.getProductById);
 
 router.get('/access-token', getAccess, shopControllers.accessToken);

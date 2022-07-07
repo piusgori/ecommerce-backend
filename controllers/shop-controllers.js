@@ -35,6 +35,19 @@ exports.getCategories = async (req, res, next) => {
     res.status(200).json({ message: 'Categories found successfully', categories });
 }
 
+exports.getOrders = async (req, res, next) => {
+    const orders = [];
+    try {
+        const foundOrders = await Order.find();
+        for(const j of foundOrders){
+            orders.push({ totalAmount: j.totalAmount, productsOrdered: j.productsOrdered, customerName: j.customerName, customerPhoneNumber: j.customerPhoneNumber, customerAddress: j.customerAddress, customerLocation: j.customerLocation, delivered: j.delivered, orderDate: j.createdAt, customerId: j.customerId });
+        }
+    } catch (err) {
+        return next(new HttpError('Could not fetch the orders', null, 500));
+    }
+    res.status(200).json({ message: 'Orders found successfully', orders });
+}
+
 exports.createProduct = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     let decodedId;
@@ -249,7 +262,7 @@ exports.addOrder = async (req, res, next) => {
         return next(new HttpError('Unable to save the orders', null, 500));
     }
 
-    const generalOrder = new Order({ totalAmount: order.totalAmount, productsOrdered: order.productsOrdered, delivered: order.delivered || false, customerEmail: user.email, customerName: user.name, customerPhoneNumber: user.phoneNumber, customerId: user._id, customerAddress: address, customerLocation: location });
+    const generalOrder = new Order({ totalAmount: order.totalAmount, productsOrdered: order.productsOrdered, delivered: order.delivered || false, customerId: user._id, customerName: user.name, customerPhoneNumber: user.phoneNumber, customerAddress: address, customerLocation: location });
 
     try {
         await generalOrder.save();
@@ -277,7 +290,7 @@ exports.delivery = async (req, res, next) => {
     let user;
 
     try {
-        user = await User.findOne({ phoneNumber: foundOrder.customerPhoneNumber});
+        user = await User.findById(foundOrder.customerId);
         if(!user){
             const message = 'The user you are looking for does not exist';
             const type = 'user';
