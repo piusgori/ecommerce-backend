@@ -22,6 +22,19 @@ exports.getProducts = async (req, res, next) => {
     res.json({ message: 'Products found successfully', products });
 }
 
+exports.getCategories = async (req, res, next) => {
+    const categories = [];
+    try {
+        const foundCategories = await Category.find();
+        for(const j of foundCategories){
+            categories.push({ title: i.title });
+        }
+    } catch (err) {
+        return next(new HttpError('Could not fetch the categories', null, 500));
+    }
+    res.status(200).json({ message: 'Categories found successfully', categories });
+}
+
 exports.createProduct = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     let decodedId;

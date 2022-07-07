@@ -26,6 +26,8 @@ const getAccess = (req, res, next) => {
 
 router.get('/', shopControllers.getProducts);
 
+router.get('/category', shopControllers.getCategories);
+
 router.get('/product/:productId', shopControllers.getProductById);
 
 router.get('/access-token', getAccess, shopControllers.accessToken);
