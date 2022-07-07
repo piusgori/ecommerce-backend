@@ -27,7 +27,7 @@ exports.getCategories = async (req, res, next) => {
     try {
         const foundCategories = await Category.find();
         for(const j of foundCategories){
-            categories.push({ title: i.title });
+            categories.push({ title: j.title });
         }
     } catch (err) {
         return next(new HttpError('Could not fetch the categories', null, 500));
