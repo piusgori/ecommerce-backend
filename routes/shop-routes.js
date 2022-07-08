@@ -43,6 +43,7 @@ router.post('/', [
 
 router.post('/category', [
     body('title').isLength({ min: 2 }).withMessage('Please enter a valid category name of at least 2 characters long'),
+    body('image').isURL().isLength({ min: 1 }).withMessage('Please enter a valid image url')
 ], shopControllers.createCategory);
 
 router.patch('/product/:productId', shopControllers.editProduct);

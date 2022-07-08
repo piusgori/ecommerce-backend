@@ -27,7 +27,7 @@ exports.getCategories = async (req, res, next) => {
     try {
         const foundCategories = await Category.find();
         for(const j of foundCategories){
-            categories.push({ title: j.title });
+            categories.push({ title: j.title, id: j._id, image: j.image });
         }
     } catch (err) {
         return next(new HttpError('Could not fetch the categories', null, 500));
@@ -328,7 +328,7 @@ exports.delivery = async (req, res, next) => {
 
 exports.createCategory = async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
-    const { title } = req.body;
+    const { title, image } = req.body;
 
     let decodedId;
     try {
@@ -382,14 +382,14 @@ exports.createCategory = async (req, res, next) => {
         return next(new HttpError('Unable to look for the category name'));
     }
 
-    const newCategory = new Category({ title });
+    const newCategory = new Category({ title, image });
 
     try {
         await newCategory.save();
     } catch (err) {
         return next(new HttpError('Unable to save the new category', null, 500));
     }
-    res.status(201).json({ message: 'Category added successfully', title: title })
+    res.status(201).json({ message: 'Category added successfully', title: newCategory.title, id: newCategory._id, image: newCategory.image })
 }
 
 exports.accessToken = async (req, res, next) => {
