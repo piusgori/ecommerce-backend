@@ -101,7 +101,10 @@ exports.createProduct = async (req, res, next) => {
         return next(new HttpError('Unable to look for similar product', null, 500))
     }
 
-    product = new Product({ title, category, price: Number(price), isDiscount: false, isFinished: false, newPrice: 0, image: 'https://cdn.pixabay.com/photo/2016/06/07/17/15/yogurt-1442034__340.jpg' });
+    const firstSplit = req.file.path.split('images')[1];
+    const majorSplit = firstSplit.substr(1);
+
+    product = new Product({ title, category, price: Number(price), isDiscount: false, isFinished: false, newPrice: 0, image: majorSplit });
 
     try {
         await product.save();

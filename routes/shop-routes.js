@@ -1,5 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
+const fileUpload = require('../utils/file-upload');
 
 const shopControllers = require('../controllers/shop-controllers');
 
@@ -34,10 +35,10 @@ router.get('/product/:productId', shopControllers.getProductById);
 
 router.get('/access-token', getAccess, shopControllers.accessToken);
 
-router.post('/', [
+router.post('/', fileUpload.single('image'), [
     body('title').isLength({ min: 2 }).withMessage('Please enter a valid name of at least 2 characters long'),
     body('category').isLength({ min: 2 }).withMessage('Please enter a valid category of at least 2 characters'),
-    body('price').isLength({ min: 2 }).withMessage('Please enter a valid price for your product'),
+    body('price').isLength({ min: 1 }).withMessage('Please enter a valid price for your product'),
 ], shopControllers.createProduct);
 
 router.post('/category', [
