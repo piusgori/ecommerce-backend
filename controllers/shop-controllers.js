@@ -78,7 +78,7 @@ exports.createProduct = async (req, res, next) => {
         return next(new HttpError('Error validating the token', null, 500));
     }
 
-    const { title, price, category } = req.body;
+    const { title, price, category, image } = req.body;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         const errorArray = errors.array();
@@ -101,10 +101,7 @@ exports.createProduct = async (req, res, next) => {
         return next(new HttpError('Unable to look for similar product', null, 500))
     }
 
-    const firstSplit = req.file.path.split('images')[1];
-    const majorSplit = firstSplit.substr(1);
-
-    product = new Product({ title, category, price: Number(price), isDiscount: false, isFinished: false, newPrice: 0, image: majorSplit });
+    product = new Product({ title, category, price: Number(price), isDiscount: false, isFinished: false, newPrice: 0, image });
 
     try {
         await product.save();
