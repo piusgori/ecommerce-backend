@@ -6,7 +6,6 @@ const orderSchema = new Schema({
     customerId: { type: String, required: true },
     customerName: { type: String, required: true },
     customerPhoneNumber: { type: Number, required: true },
-    customerAddress: { type: String, required: true },
     customerLocation: { type: Object, required: true },
     delivered: { type: Boolean, required: true },
 }, { timestamps: true })

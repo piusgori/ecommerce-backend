@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 
-// const keys = require('./private/keys');
+const keys = require('./private/keys');
 const HttpError = require('./models/http-error');
 const mainRoutes = require('./routes/main-routes');
 const authRoutes = require('./routes/auth-routes');
@@ -35,7 +35,7 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || 'An Unknown error has occurred!', content: error.content || null })
 })
 
-mongoose.connect(`mongodb+srv://pius_gori:${process.env.mongoPassword}@piuscluster.wvoqx.mongodb.net/shop?retryWrites=true&w=majority`).then(() => {
+mongoose.connect(`mongodb+srv://pius_gori:${process.env.mongoPassword || keys.mongoPassword}@piuscluster.wvoqx.mongodb.net/shop?retryWrites=true&w=majority`).then(() => {
   app.listen(process.env.PORT || 8000);
 }).catch(err => {
   console.log(err);

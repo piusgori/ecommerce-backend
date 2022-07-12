@@ -242,7 +242,7 @@ exports.addToCart = async (req, res, next) => {
 
 exports.addOrder = async (req, res, next) => {
     const userId = req.params.userId.trim();
-    const { order, address, location } = req.body;
+    const { order, location } = req.body;
     let user;
     try {
         user = await User.findById(userId);
@@ -262,7 +262,7 @@ exports.addOrder = async (req, res, next) => {
         return next(new HttpError('Unable to save the orders', null, 500));
     }
 
-    const generalOrder = new Order({ totalAmount: order.totalAmount, productsOrdered: order.productsOrdered, delivered: order.delivered || false, customerId: user._id, customerName: user.name, customerPhoneNumber: user.phoneNumber, customerAddress: address, customerLocation: location });
+    const generalOrder = new Order({ totalAmount: order.totalAmount, productsOrdered: order.productsOrdered, delivered: order.delivered || false, customerId: user._id, customerName: user.name, customerPhoneNumber: user.phoneNumber, customerLocation: location });
 
     try {
         await generalOrder.save();
