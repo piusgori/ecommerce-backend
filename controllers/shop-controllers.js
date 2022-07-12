@@ -40,12 +40,28 @@ exports.getOrders = async (req, res, next) => {
     try {
         const foundOrders = await Order.find();
         for(const j of foundOrders){
-            orders.push({ totalAmount: j.totalAmount, productsOrdered: j.productsOrdered, customerName: j.customerName, customerPhoneNumber: j.customerPhoneNumber, customerAddress: j.customerAddress, customerLocation: j.customerLocation, delivered: j.delivered, orderDate: j.createdAt, customerId: j.customerId });
+            orders.push({ totalAmount: j.totalAmount, productsOrdered: j.productsOrdered, customerName: j.customerName, customerPhoneNumber: j.customerPhoneNumber, customerLocation: j.customerLocation, delivered: j.delivered, orderDate: j.createdAt, customerId: j.customerId, id: j._id });
         }
     } catch (err) {
         return next(new HttpError('Could not fetch the orders', null, 500));
     }
     res.status(200).json({ message: 'Orders found successfully', orders });
+}
+
+exports.getOrdersByUserId = async (req, res, next) => {
+    const userId = req.params.userId.trim();
+    const userOrders = [];
+    try {
+        const foundOrders = await Order.find();
+        for (const b of foundOrders){
+            if(b.customerId === userId){
+                userOrders.push({ totalAmount: b.totalAmount, productsOrdered: b.productsOrdered, customerName: b.customerName, customerPhoneNumber: b.customerPhoneNumber, customerLocation: b.customerLocation, delivered: b.delivered, orderDate: b.createdAt, customerId: b.customerId, id: b._id });
+            }
+        } 
+    } catch (err) {
+        return next(new HttpError('Could not fetch orders by the user!', null, 500));
+    }
+    res.status(200).json({ message: 'Orders for the user found successfully', userOrders });
 }
 
 exports.createProduct = async (req, res, next) => {

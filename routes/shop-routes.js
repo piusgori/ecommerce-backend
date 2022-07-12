@@ -30,6 +30,8 @@ router.get('/category', shopControllers.getCategories);
 
 router.get('/order', shopControllers.getOrders);
 
+router.get('/order/:userId', shopControllers.getOrdersByUserId);
+
 router.get('/product/:productId', shopControllers.getProductById);
 
 router.get('/access-token', getAccess, shopControllers.accessToken);
